@@ -1,0 +1,1501 @@
+Const progVersion = 10
+Const MetOnIntvlMin   = 6
+Const MetOnOffSetMin  = 0
+Const MetDurationMin = 1
+Const MET_Off = ( MetOnOffSetMin + MetDurationMin )
+Const AWindOnIntvlMin   = MetOnIntvlMin
+Const AWindOnOffSetMin  = MetOnOffSetMin + MetDurationMin
+Const AWindDurationMin  = MetDurationMin
+Const AsimetWindOnIntvlMin   = MetOnIntvlMin
+Const AsimetWindOnOffSetMin  = AWindOnOffSetMin + MetDurationMin
+Const AsimetWindDurationMin  = MetDurationMin
+Const AsimetWind0ffOffSetMin = (AsimetWindOnOffSetMin + AsimetWindDurationMin)
+Const sbeIntvlMin 		= MetOnIntvlMin
+Const sbeOffSetMin 		= AsimetWind0ffOffSetMin      - MetDurationMin
+Const BaroCoeff         = 0.240
+Const BaroOffset        = 500.00
+Const BaroWarmupSec     = 2
+Const SolarCoeff        = 8.93E-6
+Const Eppley_Sensitivity = 3.43E-6
+Const HWMaxCount			= 35
+Const NEMA_Msg_str 		= "$GPRMC"
+Const gpsIntvlMin 		= 60
+Const gpsOffSetMin 		= 53
+Const gpsMsgParts 		= 12
+Const gpsValidatePos  = 3
+Const gps_ValNum      = 6
+Const Link10IntvlMin = 60
+Const Link10OffSetMin = 29
+Const glbStarIntvlMin 		= 1440
+Const glbStarOffSetMin 		= 1435
+Const iridOnOffsetHr = 8
+Const iridOnIntvlHr  =  24
+Const iridOnDurationHr = 2
+Const iridiumCom = COM1
+Const iridiumBaud = 115200
+Const iridiumSatPower = 8
+Const iridOffOffsetHr = (iridOnOffsetHr + iridOnDurationHr) MOD iridOnIntvlHr
+Const IntIntvlSec 	= 60
+Const IntOffSetSec 	= 0
+Const iridiumWarmUp = 30
+AngleDegrees
+SequentialMode
+Public Flag(8) As Boolean
+Public Ports(8) As Boolean
+Public timers(4) As Float
+Alias timers(1) = TRB_time
+Alias timers(2) = Wnd_time
+Public Rain As Float
+Public AirTempC As Float
+Public RHumidity As Float
+Const IntIntvlMin 	  = 15
+Const IntOffSetMin 	  = 0
+Const RhChannel			= 1
+Public P_RH As Float
+Public P_Temp As Float
+Public P_Batt As Float
+Const BridgeResistorValue = 1000
+Public Psp As Float
+Public Pir_Wm2 As Float
+Public CaseTemp As Float
+Public DomeTemp As Float
+Public ThermopileMeasured As Float
+Public CaseResistMeasured As Float
+Public DomeResistMeasured As Float
+Const StefBoltzConst = 5.6704E-8
+Const pir_A = 0.0010295
+Const pir_B = 0.0002391
+Const pir_C = 0.0000001568
+Public WindVars(6) As Float
+Alias WindVars(1) = W1_DirRaw
+Alias WindVars(2) = W1_SpeedRaw
+Alias WindVars(3) = W2_DirRaw
+Alias WindVars(4) = W2_SpeedRaw
+Const ASIMET_WIND_Cnt  = 9
+Public ASIMET_Wind(1,ASIMET_WIND_Cnt) As Float
+Const Wnd_warmUpSec 		= 0
+Const WndFlag         = 6
+Const		TRB_port			= 8
+Const 	TRB_Flag			= 8
+Const WndParNum				= 2
+Public 	Wnd_DirCorr(2)			As Float
+Alias 	Wnd_DirCorr(1) = Wnd1_DirCorr
+Alias   Wnd_DirCorr(2) = Wnd2_DirCorr
+Public Wnd_Off				As Float
+Dim bCompTrigger As Boolean
+Const HWMsgParts 			= 3
+Const HWPort					= ComRS232
+Const	HWBaud					= 19200
+Public HWOffSetMin 	As Long
+Const HWFlag					  = 7
+Public HW_Tries As Float
+Public HW_time	As Float
+Public CompassVals(HWMsgParts) As Float
+Alias CompassVals(1)	= HEADING
+Alias CompassVals(2)	= PITCH
+Alias CompassVals(3)	= ROLL
+Public CompassString As String * 120
+Public bValidCompRead As Boolean
+Public bCompTriger As Boolean
+Const HW_vctr = 1
+Public bGets(15) As Long
+Alias bGets(1) = bGetWndComp
+Alias bGets(2) = bGetBaro
+Alias bGets(3) = bGetWND1
+Alias bGets(4) = bGetLink10
+Alias bGets(5) = bGetIridium
+Alias bGets(6) = bGetMet
+Alias bGets(7) = bGetHW
+Alias bGets(8) = bGetCTD12
+Alias bGets(13) = bGetInmarSat
+Alias bGets(14) = bGLBStarOn
+Alias bGets(15) = bShutOffMux
+Const gpsPort					= ComRS232
+Const	gpsBaud					= 4800
+Const gpsMaxRetry			= 15
+Const gpsWarmUpSec		= 30
+Const gpsFlag					= 5
+Public GPSData As String * 101
+Public GPSParseStr(gpsMsgParts) As String *15
+Public GPGGAString As String * 120
+Public gpsState	As Long
+Public gpsMaxCount As Long
+Dim gpsTries As Long
+Const SBE_ValNum   = 7
+Const SBE_Num         = 2
+Public whichSBE As Long
+Public sbeOpenPort As Boolean
+Const LINK10_ValNum   = 10
+Public Link10(LINK10_ValNum) As Float
+Const muxAPower = 5
+Const muxBPower = 5
+Const muxComPort  = ComRS232
+Const muxBaud = 115200
+Public previous(2) As Long
+Alias previous(1) = prevMux
+Alias previous(2) = prevPort
+Const Link10Com = muxComPort
+Const GPS_ID = 2
+Const WND1_ID = 4
+Const SBE12_ID = 5
+Const LINK10_ID = 6
+Const BPR_ID = 7
+Const CMP_ID = 9
+Const MUX_NUM = 2
+Const MUXPORT_NUM = 5
+Public  whichMux As String *1
+Public  whichPort As String *1
+Public whichBaud As Long
+Public  currSensor As String *20
+Public  varCount As Long
+Public portIDs(MUXPORT_NUM) As String * 1
+Public muxIDs(MUX_NUM) As String * 1
+Dim muxPower(MUX_NUM) As Float
+Public muxBITstatus(MUX_NUM) As Long
+Alias muxBITstatus(1) = Mux1BitStatus
+Alias muxBITstatus(2) = Mux2BitStatus
+Public muxPortBitID(MUXPORT_NUM) As Long
+Const ESC = CHR(27)
+Const STX = CHR(2)
+Const EOT = CHR(4)
+Public strCmds(2) As String * 255
+Alias strCmds(1) = strMuxCmd
+Alias strCmds(2) = strSensorCmd
+Public strBuffer As String * 200
+Const bMaxRetry = 5
+Const BPR_valNum = 1
+Public Baro_Array(2) As Float
+Alias Baro_Array(1) = Baro_mbar
+Alias Baro_Array(2) = Baro_Temp
+Public CTDString(SBE_ValNum) As String *20
+Public CTD_Array(SBE_Num, 4) As Float
+Const wind_valNum = 9
+Public Wind1_Array(wind_valNum) As Float
+Alias Wind1_Array(1) = wnd1_Ve
+Alias Wind1_Array(2) = wnd1_Vn
+Alias Wind1_Array(3) = wnd1_WSavg
+Alias Wind1_Array(4) = wnd1_WSmax
+Alias Wind1_Array(5) = wnd1_WSmin
+Alias Wind1_Array(6) = wnd1_LastVane
+Alias Wind1_Array(7) = wnd1_LastComp
+Alias Wind1_Array(8) = wnd1_TiltXavg
+Alias Wind1_Array(9) = wnd1_TiltYavg
+Public asimetCommand As String * 1
+Const asimet_SetClock = "D"
+Const asimet_outputHourly = "V"
+Const asimet_outputMin = "C"
+Const maxASIMETWait = 100
+Public ASIMET_SensorArray(MUX_NUM*MUXPORT_NUM,5) As String * 20
+Const ASMIMET_MAX_OUTPUT = 30
+Public ASIMET_Data(ASMIMET_MAX_OUTPUT)As Float
+Public currMux As String *1
+Public currPort As String *1
+Public currSensorBaud As Long
+Public currOutputValues As Float
+Dim  ProgSignature As Long
+Public counters(5) As Long
+Alias counters(1)	= mainCounter
+Alias counters(3)	= metCounter
+Alias counters(4) = HWCounter
+Alias counters(5) = gpsCounter
+Public asimetErrorCnt As Long
+Public ErrorMsg(2) As String *255
+Alias ErrorMsg(1) = EventMsg
+Alias ErrorMsg(2) = EventDetails
+Const CR = CHR(13)
+Const LF = CHR(10)
+Const CRLF = CHR(13) + CHR(10)
+Public _Temp(6)
+Alias _Temp(1)	= _temp1
+Alias _Temp(2) 	= _temp2
+Alias _Temp(3) 	= _temp3
+Alias _Temp(4)	= _temp4
+Alias _Temp(5)	= _temp5
+Alias _Temp(6)	= _temp6
+Public _tempStr(3) As String * 10
+Alias _tempStr(1) = _tempStr1
+Alias _tempStr(2) = _tempStr2
+Alias _tempStr(3) = _tempStr3
+Public mux_port As String * 5
+Public _Debug As Float
+Public _prevDebug As Float
+DataTable (AMet_6Min, 1, 500)
+  DataInterval (((MET_Off*60)-1), (MetOnIntvlMin*60),Sec,10)
+  Average (1,Baro_mbar,IEEE4,Baro_mbar = NAN)
+  Average (1,RHumidity,FP2,RHumidity = NAN)
+  StdDev(1,RHumidity,FP2,RHumidity = NAN)
+  Average (1,AirTempC,FP2,False)
+  StdDev(1,AirTempC,FP2,AirTempC = NAN)
+  Totalize(1,Rain,IEEE4,Rain = NAN)
+  Average (1,Psp,IEEE4,Psp = NAN)
+  StdDev(1,Psp,IEEE4,Psp = NAN)
+  Average (1,Pir_Wm2,IEEE4,False)
+  StdDev(1,Pir_Wm2,IEEE4,Pir_Wm2 = NAN)
+EndTable
+DataTable (AWind_6Min, (bGetWndComp = 0), 1000)
+  WindVector (1,W1_SpeedRaw,Wnd1_DirCorr, FP2, false, 0, 0,1)
+  FieldNames("W1_SpeedAvg,W1_DirAvg,W1_DirStd,W1_SpeedMax,W1_SpeedStd")
+  Maximum(1,W1_SpeedRaw,FP2,False,false)
+  FieldNames("W1_SpeedMax")
+  StdDev(1,W1_SpeedRaw,fp2,False)
+  FieldNames("W1_SpeedStd")
+  WindVector (1,W2_SpeedRaw,Wnd2_DirCorr, FP2, false, 0, 0,1)
+  FieldNames("W2_SpeedAvg,W2_DirAvg,W2_DirStd,W2_SpeedMax,W2_SpeedStd")
+  Maximum(1,W2_SpeedRaw,FP2,False,False)
+  FieldNames("W2_SpeedMax")
+  StdDev(1,W2_SpeedRaw,fp2,False)
+  FieldNames("W2_SpeedStd")
+EndTable
+DataTable (CTD1_6Min, -1 ,1000)
+  Sample(4,CTD_Array(1,1),IEEE4)
+  FieldNames("ID, Temp,Cond, Depth")
+EndTable
+DataTable (CTD2_6Min, -1 ,1000)
+  Sample(4,CTD_Array(2,1),IEEE4)
+  FieldNames("ID, Temp,Cond, Depth")
+EndTable
+DataTable (Sys_1Hr, -1 ,48)
+  DataInterval (0,1,Hr,10)
+  Minimum (1,P_Batt,FP2,0,True)
+  Maximum (1,P_Batt,FP2,False,True)
+  Average(1,P_Temp,FP2,False)
+  Average(1,P_RH,FP2,False)
+  Sample(1,Link10(1),Long)
+  Sample(LINK10_ValNum-1,Link10(2),IEEE4)
+  FieldNames("ElapsedSec, Amps, Volts, AmpHours, PeukertAmpHours, PeukertAmps, TimeRemaining, BarGraphState, TempC")
+EndTable
+DataTable (ASIMETWind1_Data, -1 ,1000)
+  Sample(wind_valNum,Wind1_Array,FP2)
+EndTable
+DataTable (Comp_6Min,bCompTrigger,1000)
+  WindVector (1,HW_vctr,HEADING,FP2,False,0,0,4)
+  FieldNames("Heading_Avg,Heading_Std")
+  Average (1,PITCH, fp2,false)
+  StdDev(1, PITCH,fp2,false)
+  Maximum (1,PITCH,fp2,false,False)
+  Average (1,ROLL, fp2,False)
+  StdDev(1,ROLL,fp2,False)
+  Maximum (1,ROLL,fp2,false,False)
+EndTable
+DataTable (GPS_1Hr,1,500)
+  Sample(gpsMsgParts,GPSParseStr,String)
+EndTable
+DataTable (DBG_Compass,1, 1000)
+  Sample(1,HWCounter, FP2)
+  Sample(1,HW_Tries, FP2)
+  Sample(1,bGetHW,FP2)
+  Sample(1,HW_time, FP2)
+  Sample(1,CompassString,String)
+  Sample(1,_tempStr3,String)
+  Sample(HWMsgParts,CompassVals(1),FP2)
+EndTable
+DataTable (Compass_Raw, 1, 1000)
+  Sample(HWMsgParts,CompassVals(1),FP2)
+EndTable
+DataTable (DBG_AWindsRaw, 1, 500)
+  Sample(2,W1_DirRaw,FP2)
+  Sample(2,W2_DirRaw,FP2)
+  Sample(HWMsgParts,CompassVals(1),FP2)
+  Sample(2,Wnd1_DirCorr,FP2)
+EndTable
+DataTable (Awnd1_RawData, -1 ,500)
+  Sample(2,W1_DirRaw,FP2)
+  WindVector (1,W1_SpeedRaw,W1_DirRaw, FP2, false, 0, 0,1)
+EndTable
+DataTable (Awnd2_RawData, -1 ,500)
+  Sample(2,W2_DirRaw,FP2)
+  WindVector (1,W2_SpeedRaw,W2_DirRaw, FP2, false, 0, 0,1)
+EndTable
+DataTable (Baro_RawData, -1 ,500)
+  Sample(2,Baro_Array,IEEE4)
+EndTable
+DataTable (PIR_RawData, -1 ,1000)
+  Average (1,ThermopileMeasured,IEEE4,False)
+  Average (1,CaseResistMeasured,IEEE4,False)
+  Average (1,DomeResistMeasured,IEEE4,False)
+  Sample (1,Eppley_Sensitivity,IEEE4)
+EndTable
+DataTable (EventLog, 1,250)
+  Sample (1,EventMsg,String)
+  Sample (1,EventDetails,String)
+EndTable
+Function ShutOFFMux( muxIdOff As Long ) As Boolean
+  If ( muxIdOff > 0 ) Then
+    SerialOpen (muxComPort,muxBaud,3,0,10)
+    strMuxCmd = ESC + STX + EOT
+    SerialOut(muxComPort,strMuxCmd,"",0,10)
+    If (muxIdOff = 1) Then
+      PortSet(muxAPower, false)
+      Delay(1,200,msec)
+      muxBITstatus(1) = 0
+    ElseIf (muxIdOff =2) Then
+      PortSet(muxBPower, false)
+      Delay(1,200,msec)
+      muxBITstatus(2) = 0
+    Else
+      PortSet(muxAPower, false)
+      Delay(1,100,msec)
+      PortSet(muxBPower, false)
+      Delay(1,100,msec)
+      muxBITstatus(1) = 0
+      muxBITstatus(2) = 0
+    EndIf
+  EndIf
+EndFunction
+Function SetupMuxPort ( SensorID As Long ) As Long
+  If (_Debug ) Then
+    EventMsg = " (SetupMuxPort) Entering ------- "
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  currSensor = ASIMET_SensorArray(SensorID,1)
+  whichMux = ASIMET_SensorArray(SensorID,2)
+  whichPort = ASIMET_SensorArray(SensorID,3)
+  Public muxId As Long
+  Public portId As Long
+  If whichMux <> "" Then muxId = (ASCII(whichMux) - ASCII("A")) +1
+  If whichPort <> "" Then portId = (ASCII(whichPort) - ASCII("A")) +1
+  If whichMux = "" OR whichPort = "" Then
+    If whichMux = "" Then muxId = 0
+    If whichPort = "" Then portId = 0
+  EndIf
+  If gpsState >= 2 AND (currSensor <> "GPS") Then
+    EventMsg = "WARNING: Trying to collect from sensor(" + currSensor+") but GPS controlling Mux communications. Waiting for GPS to release communications."
+    EventDetails = "Skipping "+ currSensor+ " on " + muxId + "/" +whichPort+ "  ID(" +portId+ ")"
+    CallTable Eventlog()
+    Return false
+  EndIf
+  If (muxId > MUX_NUM OR portId > MUXPORT_NUM) OR (muxId < 0 OR portId < 0) Then
+    EventMsg = "ERROR: Invalid mux(" +whichMux+ ") = " + muxId + " or port(" +whichPort+ ") = " +portId+ ")."
+    EventDetails = ""
+    CallTable Eventlog()
+    Return (muxId * -1)
+  EndIf
+  If (_Debug = 10) Then
+    EventMsg = " ******** [" + Status.TimeStamp + "](" +mainCounter+") " + currSensor + ": (" + whichMux + " / " + whichPort+ ")"
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  If muxId > 1 AND portId = 3 Then
+    EventMsg = "Port C of mux[" + CHR( (ASCII("A") + muxId) -1) + "] can not be used in expanded mode"
+    EventDetails = ""
+    CallTable eventlog()
+    Return (muxId * -1)
+  EndIf
+  If  (muxBITstatus(muxId) <> muxPortBitID(portId)) Then
+    SerialClose(muxComPort)
+    PortSet(muxBPower,true)
+    Delay(1,10,msec)
+    SerialOpen (muxComPort,muxBaud,3,0,10)
+    strMuxCmd = ESC + STX + EOT
+    SerialOut(muxComPort,strMuxCmd,"",0,10)
+    strMuxCmd = ESC + STX + whichMux + whichPort
+    SerialOut(muxComPort,strMuxCmd,"",0,10)
+    prevMux = muxId
+    prevPort =portId
+    SerialClose(muxComPort)
+    Delay(1,50,msec)
+    bShutOffMux = true
+  EndIf
+  If (_Debug) Then
+    EventMsg = " (SetupMuxPort) Exiting ------- "
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  Return muxId
+EndFunction
+Function GetGPS () As Boolean
+  Dim warmUp As Long
+  If (gpsState = 1 OR gpsState = -2) Then
+    SetupMuxPort ( GPS_ID )
+    Timer(gpsFlag,Sec,2)
+    gpsCounter = 0
+    If gpsState =1 Then gpsTries = 1
+    EventMsg = ""
+    GPSData = ""
+    GPGGAString = ""
+    SerialOpen(gpsPort, gpsBaud,0,0,10000)
+    gpsState = 2
+  EndIf
+  gpsCounter = gpsCounter + 1
+  If gpsState = 2 Then
+    warmUp = Timer(gpsFlag,Sec,4)
+    If (warmUp >= gpsWarmUpSec) Then
+      SerialFlush(muxComPort)
+      gpsState = gpsState +1
+      gpsCounter = 0
+    Else
+      ExitFunction
+    EndIf
+  EndIf
+  If gpsState = 3 Then
+    SerialIn(GPSData, muxComPort ,50,13,500)
+    _temp5 = InStr(1,GPSData, NEMA_Msg_str ,2)
+    If _Debug = 7 Then
+      EventMsg = "[" + Status.TimeStamp + "] (GPS) [" +gpsCounter+"] : state(" + gpsState + ") -  HeaderStartLoc(" + _temp5 + ")"
+      EventDetails = "GPSData = '" +GPSData+ "'"
+      CallTable Eventlog()
+    EndIf
+    If _temp5 > 0 Then
+      GPGGAString=Mid(GPSData,_temp5,80)
+      SplitStr(GPSParseStr(), GPGGAString, CHR(44), gpsMsgParts, 5)
+      Delay(1,25,mSec)
+      If (_Debug = 7) Then
+        EventMsg = "GPS: Found Header. Count(" + gpsCounter + ") - Retry(" + gpsMaxRetry + ")"
+        EventDetails = GPGGAString
+        CallTable EventLog()
+      EndIf
+      If GPSParseStr(gpsValidatePos) >= "A" Then
+        gpsState = -1
+      Else
+        gpsTries = gpsTries +1
+        If gpsTries >= gpsMaxRetry Then
+          gpsState = -1
+        Else
+          gpsState = -2
+          gpsTries = gpsTries +1
+          If (_Debug = 7) Then
+            EventMsg = "[" + Status.TimeStamp + "] GPS: Unable to find valid data(" + GPSParseStr(gpsValidatePos) + " ) - Retrying(" + (gpsMaxRetry -gpsTries)  + ") more times"
+            EventDetails = GPSData
+            CallTable EventLog()
+          EndIf
+        EndIf
+      EndIf
+    Else
+      If (gpsCounter >= gpsMaxRetry) Then
+        EventMsg = "GPS: Unable to find Header. Count(" + gpsCounter + " ) - Retry(" + gpsMaxRetry + ")"
+        EventDetails = GPSData
+        CallTable EventLog()
+      EndIf
+    EndIf
+  EndIf
+  If gpsState = -1 Then
+    _temp4 = Timer(gpsFlag,Sec,1)
+    If gpsCounter >= gpsMaxRetry Then
+      Return false
+    Else
+      Return true
+    EndIf
+  Else
+    Return true
+  EndIf
+EndFunction
+Function GetCompassAverage () As Long
+  If _Debug = 3 Then
+    EventMsg = "[" + Status.TimeStamp + "] (COMPASS) **** [" +HWCounter+"] bGetHW(" + bGetHW + ")"
+    EventDetails = ""
+    CallTable Eventlog()
+  EndIf
+  If (bGetHW = 1) Then
+    HWCounter = 1
+    _temp1 = SetupMuxPort(CMP_ID)
+    If (_temp1 < 0) Then
+      EventMsg = " ERROR: (GetCompass) Unable to setup MuxPort. ID=" + CMP_ID + "."
+      EventDetails = ""
+      CallTable EventLog()
+      SerialClose(muxComPort)
+      Return (bGetHW * -1)
+    EndIf
+    currSensor = ASIMET_SensorArray(CMP_ID,1)
+    whichMux = ASIMET_SensorArray(CMP_ID,2)
+    whichPort = ASIMET_SensorArray(CMP_ID,3)
+    whichBaud = ASIMET_SensorArray(CMP_ID,4)
+    currOutputValues = ASIMET_SensorArray(CMP_ID,5)
+    SerialOpen (muxComPort, HWBaud,3,0,1024)
+    Timer(HWFlag,Sec,2)
+    bGetHW = bGetHW +1
+    Return bGetHW
+  EndIf
+  HWCounter = HWCounter + 1
+  If bGetHW =2 Then
+    HW_time = Timer(HWFlag,Sec,4)
+    If HW_time <= 2 Then
+      Return bGetHW
+    Else
+      If _Debug = 3 Then
+        EventMsg = "[" + Status.TimeStamp + "] (COMPASS) : strSensorCmd [" +strSensorCmd+"] "
+        EventDetails = ""
+        CallTable Eventlog()
+      EndIf
+      strSensorCmd = "*S" + CRLF
+      SerialOut (muxComPort, strSensorCmd, "", 1,10)
+      SerialFlush(muxComPort)
+      bGetHW = bGetHW +1
+      Timer(HWFlag,Sec,2)
+      Return bGetHW
+    EndIf
+  EndIf
+  If bGetHW =3 Then
+    HW_time = Timer(HWFlag,Sec,4)
+    bValidCompRead = False
+    CompassString = ""
+    strSensorCmd = "*A" + CRLF
+    SerialOut (HWPort, strSensorCmd, "",0,100)
+    Timer(HWFlag,Sec,2)
+    bGetHW = bGetHW + 1
+    HW_Tries = 0
+    Return bGetHW
+  EndIf
+  If bGetHW =4 Then
+    HW_time = Timer(HWFlag,Sec,4)
+    HW_Tries = HW_Tries + 1
+    _temp4 = SerialInChk(HWPort)
+    If (_temp4 >= 14) Then
+      bGetHW = 5
+      HW_Tries = 0
+    ElseIf HW_Tries > 3 Then
+      bGetHW = 3
+    EndIf
+    If _Debug = 3 Then
+      EventMsg = "[" + Status.TimeStamp + "] (COMPASS) **** [" +HWCounter+"] HW_time(" + HW_time + ") -  HW_Tries(" + HW_Tries + ") Bytes(" + _temp4 + ")"
+      EventDetails = ""
+      CallTable Eventlog()
+    EndIf
+  EndIf
+  If (bGetHW = 5) Then
+    HW_Tries = HW_Tries + 1
+    SerialIn (CompassString, HWPort,80,10,52)
+    If ( CompassString <> 0) Then
+      SplitStr(CompassVals(), CompassString, CHR(44), HWMsgParts,0)
+      If ( (HEADING >=0 AND HEADING < 360) AND NOT(ROLL = NAN) ) Then
+        bValidCompRead = True
+        Timer(HWFlag,Sec,2)
+      Else
+        bValidCompRead = False
+      EndIf
+      If _Debug = 3 Then
+        EventMsg = "[" + Status.TimeStamp + "] (COMPASS) : strSensorCmd [" +strSensorCmd+"] "
+        EventDetails = CompassString
+        CallTable Eventlog()
+      EndIf
+    EndIf
+  EndIf
+  Return bGetHW
+EndFunction
+Function GetCompassSingle () As Long
+  If _Debug = 3 OR _Debug = 10 Then
+    EventMsg = "[" + Status.TimeStamp + "] (COMPASS) **** [" +HWCounter+"] bGetHW(" + bGetHW + ")"
+    EventDetails = ""
+    CallTable Eventlog()
+  EndIf
+  If (bGetHW = 1) Then
+    HWCounter = 1
+    _temp1 = SetupMuxPort(CMP_ID)
+    If (_temp1 < 0) Then
+      EventMsg = " ERROR: (GetCompass) Unable to setup MuxPort. ID=" + CMP_ID + "."
+      EventDetails = ""
+      CallTable EventLog()
+      SerialClose(muxComPort)
+      Return (bGetHW * -1)
+    EndIf
+    currSensor = ASIMET_SensorArray(CMP_ID,1)
+    whichMux = ASIMET_SensorArray(CMP_ID,2)
+    whichPort = ASIMET_SensorArray(CMP_ID,3)
+    whichBaud = ASIMET_SensorArray(CMP_ID,4)
+    currOutputValues = ASIMET_SensorArray(CMP_ID,5)
+    SerialOpen (muxComPort, HWBaud,3,0,1024)
+    Timer(HWFlag,mSec,2)
+    bGetHW = 3
+    Return bGetHW
+  EndIf
+  HWCounter = HWCounter + 1
+  If bGetHW =3 Then
+    bValidCompRead = False
+    CompassString = ""
+    bGetHW = 5
+    HW_Tries = 0
+    SerialFlush(muxComPort)
+    Timer(HWFlag,mSec,2)
+    _tempStr1 = ""
+  EndIf
+  If (bGetHW = 5) Then
+    HW_Tries = HW_Tries + 1
+    HW_time = Timer(HWFlag,mSec,4)
+    Do While (HW_time < 200)
+      SerialIn (CompassString, HWPort,50,0,52)
+      _temp1 = InStr(1,CompassString,CHR(10),3)
+      _temp1 = InStr((_temp1 + 2),CompassString,CHR(10),3)
+      _temp2 = InStr( (_temp1+2),CompassString,CHR(10),3)
+      _tempStr3 = Mid(CompassString,_temp1,_temp2-_temp1)
+      SplitStr(CompassVals(), _tempStr3, CHR(44), HWMsgParts,0)
+      If ( (HEADING >=0 AND HEADING < 360) AND NOT(ROLL = NAN) ) Then
+        bValidCompRead = True
+      Else
+        bValidCompRead = False
+      EndIf
+      If _Debug = 3 OR _Debug = 10  Then
+        EventMsg = "[" + Status.TimeStamp + "] (COMPASS) :  ["+HWCounter+"]  - [ " +_temp1+ " : "+_temp2+ " ] = '" + _tempStr3 +"' - time [" +Timer(HWFlag,Sec,4)+ "]"
+        EventDetails = CompassString
+        CallTable Eventlog()
+      EndIf
+      If bValidCompRead Then ExitDo
+      Delay(1,10,msec)
+      HW_time = Timer(HWFlag,mSec,4)
+    Loop
+  EndIf
+  Return bGetHW
+EndFunction
+Function GetLink10() As Boolean
+  _temp1 = SetupMuxPort(LINK10_ID)
+  If (_temp1 < 0) Then
+    EventMsg = " ERROR: (GetLink10) Unable to setup MuxPort."
+    EventDetails = ""
+    CallTable EventLog()
+    ShutOffMux(ABS(_temp1))
+    SerialClose(muxComPort)
+    Return false
+  EndIf
+  If (_Debug ) Then
+    EventMsg = "(GetLink10) 'Entering --------"
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  Dim cont As Boolean
+  cont = true
+  SerialOpen (muxComPort,9600,0,0,500)
+  strBuffer = ""
+  Timer(LINK10_ID,mSec,2)
+  _temp5 = 0
+  _temp4 = 1
+  Do While ( cont )
+    _temp4 = _temp4 + 1
+    If SerialInChk(Link10Com) > 0 Then
+      _temp5 = _temp5 + 1
+      SerialIn(strBuffer,Link10Com,150,10,(LINK10_ValNum * 8))
+      _temp2 = InStr(1,strBuffer,CR,3)
+      If (Len(strBuffer) > 0) Then
+        If (_Debug = 10 ) Then
+          EventMsg = "[" + Status.TimeStamp + "] (Link10) - _temp2(" +_temp2 +") _temp3(" +_temp3 +") strBuffLen("+Len(strBuffer)  +")  [" + Timer(LINK10_ID,msec,4) + " mSecs];"
+          EventDetails = strBuffer
+          CallTable EventLog()
+        EndIf
+        strBuffer = Mid(strBuffer,1, _temp2 )
+        If (_Debug = 10 ) Then
+          EventMsg = "[" + Status.TimeStamp + "] (Link10) - 'data' found parsing from(" +_temp2 +") [" + Timer(LINK10_ID,msec,4) + " mSecs];"
+          EventDetails = strBuffer
+          CallTable EventLog()
+        EndIf
+        SplitStr(Link10(),strBuffer,"",LINK10_ValNum,0)
+        If (Link10(1) <> NAN) Then ExitDo
+      EndIf
+      _temp6 = Timer(LINK10_ID,msec,4)
+      If (_Debug = 10 ) Then
+        EventMsg = "[" + Status.TimeStamp + "] * 0 * (Link10) ["+ _temp5 +"]' _temp2(" +_temp2 +") [" + _temp6 + " mSecs];"
+        EventDetails = strBuffer
+        CallTable EventLog()
+      EndIf
+      If (_temp6 >2500) Then cont = false
+      Delay(1,50,msec)
+    EndIf
+    _temp6 = Timer(LINK10_ID,msec,4)
+    If (_temp6 >2500) Then cont = false
+  Loop
+  If (_Debug ) Then
+    EventMsg = "(GetLink10) 'Exiting --temp5(" +_temp5 +") Temp6(" + _temp6 + ") "+ Timer(LINK10_ID,msec,4) + " mSecs];"
+    CallTable EventLog()
+  EndIf
+  Timer(LINK10_ID,msec,1)
+  SerialClose(Link10Com)
+  If (Link10(1)) <> NAN AND Link10(1) > 0 Then
+    Return true
+  Else
+    Return false
+  EndIf
+EndFunction
+Function GetAsimet(SensorID As Long, cmd As String *1) As Boolean
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "] :  Entering GetAsimet ("+ SensorID+ ", "+cmd+ ")"
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  _temp1 = SetupMuxPort(SensorID)
+  If (_temp1 < 0) Then
+    EventMsg = " ERROR: (GetAsimet) Unable to setup MuxPort. ID=" + SensorID + "."
+    EventDetails = ""
+    CallTable EventLog()
+    SerialClose(muxComPort)
+    Return false
+  EndIf
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "] :  SetupMuxPort("+ SensorID+ ") returned " + _temp1
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  Public chkStrLen As Long
+  Dim returnVal As Boolean
+  Dim continue As Boolean
+  continue = true
+  currSensor = ASIMET_SensorArray(SensorID,1)
+  whichMux = ASIMET_SensorArray(SensorID,2)
+  whichPort = ASIMET_SensorArray(SensorID,3)
+  whichBaud = ASIMET_SensorArray(SensorID,4)
+  currOutputValues = ASIMET_SensorArray(SensorID,5)
+  chkStrLen = (currOutputValues * 8)/2
+  If (currSensor = "" OR currOutputValues < 1) Then
+    EventMsg = " ERROR: (GetAsimet) Invalid Sensor Information( ID=" + SensorID + ") command(" + cmd +")."
+    EventDetails = "Mux(" +whichMux+ "), Port(" +whichPort+ "), Baud(" +whichBaud+ "), OuputValues(" +currOutputValues+ ")."
+    CallTable EventLog()
+    ShutOffMux(SensorID)
+    SerialClose(muxComPort)
+    Return false
+  EndIf
+  If cmd = "" Then cmd = "C"
+  strSensorCmd = "#" + currSensor + cmd + CR
+  If (_Debug ) Then
+    EventMsg = "(GetAsimet) 'Collecting(" +SensorID+ ") "+currSensor+" ("+whichMux+"/"+whichPort+") at "+whichBaud+" --------"
+    EventDetails = strSensorCmd
+    CallTable EventLog()
+  EndIf
+  ASIMET_Data(1) = NAN
+  SerialOpen (muxComPort, 9600,3,0,1024)
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "] :  Opening Port to talk to sensor at 9600.."
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  SerialOut(muxComPort,strSensorCmd,"",0,10)
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "] :  Sent command to sensor '" +strSensorCmd+ "'"
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  strBuffer = ""
+  Timer(SensorID,mSec,2)
+  _temp5 = 0
+  _temp4 = 1
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "] :  Entering GetDataLoop"
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  Do While ( continue )
+    If Flag(8) Then continue = false
+    _temp4 = _temp4 + 1
+    If (_Debug = 10  AND IfTime(0,100,msec)) Then
+      EventMsg = "[" + Status.TimeStamp + "]      - [" +mainCounter+ "] :  Checking for incoming data "
+      EventDetails = ""
+      CallTable EventLog()
+    EndIf
+    If SerialInChk(muxComPort) > 0  Then
+      _temp5 = _temp5 + 1
+      SerialIn(strBuffer,muxComPort,150,10,(currOutputValues * 8))
+      If (_Debug = 10 ) Then
+        EventMsg = "[" + Status.TimeStamp + "]      - [" +mainCounter+ "] :  Retreived data from port"
+        EventDetails = strBuffer
+        CallTable EventLog()
+      EndIf
+      _temp2 = InStr(1,strBuffer,CR,3)
+      If (Len(strBuffer) > 0) Then
+        _temp3 = InStr( (_temp2+1),strBuffer,CR,3)
+        If (_Debug = 10 ) Then
+          EventMsg = "[" + Status.TimeStamp + "]      - [" +mainCounter+ "] (GetAsimet) - _temp2(" +_temp2 +") _temp3(" +_temp3 +") strBuffLen("+Len(strBuffer)  +")  [" + Timer(SensorID,msec,4) + " mSecs];"
+          EventDetails = strBuffer
+          CallTable EventLog()
+        EndIf
+        If (_temp2 <> 0) Then
+          strBuffer = Mid(strBuffer,1, _temp2 )
+        Else
+          If (_Debug = 5 ) Then
+            EventMsg = "[" + Status.TimeStamp + "]      - [" +mainCounter+ "] WARNING : Did not find end-of-line character(" +_temp2 +") for sensor [" +currSensor + "]"
+            EventDetails = strBuffer
+            CallTable EventLog()
+          EndIf
+        EndIf
+        If (_Debug = 10 ) Then
+          EventMsg = "[" + Status.TimeStamp + "]      - [" +mainCounter+ "] (GetAsimet) - 'data' found parsing from(" +_temp2 +") [" + Timer(SensorID,msec,4) + " mSecs];"
+          EventDetails = strBuffer
+          CallTable EventLog()
+        EndIf
+        SplitStr(ASIMET_Data(),strBuffer,"",ASMIMET_MAX_OUTPUT,0)
+        If (ASIMET_Data(1) <> NAN) Then ExitDo
+      EndIf
+      _temp6 = Timer(SensorID,msec,4)
+      If (_Debug = 10 ) Then
+        EventMsg = "[" + Status.TimeStamp + "]      - [" +mainCounter+ "] * (GetAsimet) ["+ _temp5 +"]' _temp2(" +_temp2 +") [" + _temp6 + " mSecs];"
+        EventDetails = strBuffer
+        CallTable EventLog()
+      EndIf
+      If (_temp6 > maxASIMETWait) Then
+        continue = false
+      EndIf
+      Delay(1,10,msec)
+    EndIf
+    _temp6 = Timer(SensorID,msec,4)
+    If (_temp6 > maxASIMETWait) Then  continue = false
+  Loop
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "] :  Exited GetDataLoop"
+    EventDetails = ""
+    CallTable EventLog()
+  EndIf
+  If (_temp6 <= maxASIMETWait AND (ASIMET_Data(1) <> NAN) )
+    Select Case SensorID
+    Case BPR_ID
+      Move(Baro_mbar,BPR_valNum, ASIMET_Data(),BPR_valNum,)
+    Case WND1_ID
+      Move(Wind1_Array,wind_valNum, ASIMET_Data(),wind_valNum,)
+    Case GPS_ID
+    Case SBE12_ID
+    EndSelect
+    returnVal = true
+  Else
+    returnVal = false
+  EndIf
+  If (_Debug = 10 ) Then
+    EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+ "](GetAsimet) 'Exiting --temp5(" +_temp5 +") Temp6(" + _temp6 + ") "+ Timer(SensorID,msec,4) + " mSecs];"
+    EventDetails = " " + ASIMET_Data(1)
+    CallTable EventLog()
+  EndIf
+  Timer(SensorID,msec,1)
+  SerialClose(muxComPort)
+  Return returnVal
+EndFunction
+Function GetCTDs(which As Long, openCom As Boolean) As Long
+  Dim _error As Long
+  If openCom AND bGetCTD12 = 1 Then
+    _temp1 = SetupMuxPort(SBE12_ID)
+    If (_temp1 < 0) Then
+      EventMsg = " ERROR: (GetCTDs) Unable to setup MuxPort. ID=" + SBE12_ID + "."
+      EventDetails = ""
+      CallTable EventLog()
+      ShutOffMux(ABS(_temp1))
+      SerialClose(muxComPort)
+      Return (which * -1)
+    EndIf
+    currSensor = ASIMET_SensorArray(SBE12_ID,1)
+    whichMux = ASIMET_SensorArray(SBE12_ID,2)
+    whichPort = ASIMET_SensorArray(SBE12_ID,3)
+    whichBaud = ASIMET_SensorArray(SBE12_ID,4)
+    currOutputValues = ASIMET_SensorArray(SBE12_ID,5)
+    If (currSensor = "" OR currOutputValues < 1) Then
+      EventMsg = " ERROR: (GetCTDs) Invalid Sensor Information( ID=" + SBE12_ID +")."
+      EventDetails = "Mux(" +whichMux+ "), Port(" +whichPort+ "), Baud(" +whichBaud+ "), OuputValues(" +currOutputValues+ ")."
+      CallTable EventLog()
+      ShutOffMux(SBE12_ID)
+      SerialClose(muxComPort)
+      Return (which * -1)
+    EndIf
+    _error = 0
+    SerialOpen (muxComPort, 9600,3,0,1024)
+    SerialIn(strBuffer,muxComPort,50,10,(currOutputValues * 12))
+    If (_Debug = 6) Then
+      EventMsg = "[" + Status.TimeStamp + "] (GetCTDs) - Collecting SBE [" + which + "]"
+      EventDetails = "Delaying up to 4 secs"
+      CallTable EventLog()
+    EndIf
+    SerialFlush(muxComPort)
+    strSensorCmd = "PwrOn"+ CRLF
+    SerialOut(muxComPort,strSensorCmd,"",0,10)
+    Delay(1,150,mSec)
+    strSensorCmd = "EchoOff"+ CRLF
+    SerialOut(muxComPort,strSensorCmd,"",0,10)
+    bGetCTD12 =  bGetCTD12 + 1
+    Return which
+  EndIf
+  If bGetCTD12 = 2 Then
+    SerialFlush(muxComPort)
+    strSensorCmd = "#0"+ which + "TS"  + CRLF
+    If (_Debug = 6) Then
+      EventMsg = "[" + Status.TimeStamp + "] (GetCTDs) - [" + which + "] Sending ... '" + strSensorCmd + "'."
+      EventDetails = "Delaying up to 4 secs"
+      CallTable EventLog()
+    EndIf
+    SerialOut(muxComPort,strSensorCmd,"",0,10)
+    Timer(3,msec,2)
+    bGetCTD12 = 3
+    Return which
+  EndIf
+  If bGetCTD12 = 3 Then
+    _temp2 = Timer(3,msec,4)
+    If ( _temp2 < 3000)
+      Return bGetCTD12
+    EndIf
+    Timer(3,msec,2)
+    _temp2 =  0
+    _temp3  = 0
+    _temp4 = 0
+    Do While ( _temp2 <= 6000)
+      _temp2 = Timer(3,msec,4)
+      SerialIn(strBuffer,muxComPort,100,10,(currOutputValues * 12))
+      _temp3 = InStr(1,strBuffer,",",2)
+      _temp4 = InStr(1,strBuffer,":",2)
+      If (_Debug = 6) Then
+        EventMsg = "[" + Status.TimeStamp + "] (GetCTDs) - [" + which + "] - Time(" + _temp2 + ") - Comma(" + _temp3 + ") - Colon(" + _temp4 + ")."
+        EventDetails = strBuffer
+        CallTable EventLog()
+      EndIf
+      If ( _temp3 > 0 AND _temp4 > 0) Then
+        ExitDo
+      Else
+        strBuffer = ""
+      EndIf
+      Delay( 1, 150, msec)
+    Loop
+    If (_Debug = 6) Then
+      EventMsg = "[" + Status.TimeStamp + "] (GetCTDs) - [" + which + "] Comma(" +_temp3+ ")  time(" + _temp2 + ")."
+      EventDetails = ""
+      CallTable EventLog()
+    EndIf
+    If _temp3 > 0 Then
+      If (_Debug = 6) Then
+        EventMsg = "[" + Status.TimeStamp + "] (GetCTDs) - [" + which + "] -  Comma[" + _temp3 + "]."
+        EventDetails = strBuffer
+        CallTable EventLog()
+      EndIf
+      SplitStr(CTDString,strBuffer,",",SBE_ValNum,5)
+      Move(CTD_Array(which,1),4,CTDString(1),4)
+    Else
+      _error = 1
+      If (_Debug = 6) Then
+        EventMsg = "[" + Status.TimeStamp + "] ERROR: (GetCTDs) - [" + which + "] - Comma(" + _temp3 + ")."
+        EventDetails = strBuffer
+        CallTable EventLog()
+      EndIf
+    EndIf
+  EndIf
+  Timer(3,msec,1)
+  If _error Then
+    Return (which * -1)
+  Else
+    bGetCTD12 = 4
+    Return which
+  EndIf
+EndFunction
+Function ResistanceToTemperature(MeasuredResistance, resultingUnits As String *1) As Float
+  Dim MeasuredResistanceInOhms As Float
+  MeasuredResistanceInOhms = BridgeResistorValue * (MeasuredResistance /(1 - MeasuredResistance ))
+  If _Debug = 2 Then
+    EventMsg = "(ResistanceToTemp) MeasuredResistance("+ MeasuredResistance + ") MeasuredResistanceInOhms("+ MeasuredResistanceInOhms + ") ."
+    EventDetails = "returned " + (1 / (pir_A + (pir_B * LN(MeasuredResistanceInOhms)) + (pir_C * (LN(MeasuredResistanceInOhms))^3)) ) + " Kelvin"
+    CallTable EventLog()
+  EndIf
+  If resultingUnits = "C" Then
+    Return (1 / (pir_A + (pir_B * LN(MeasuredResistanceInOhms)) + (pir_C * (LN(MeasuredResistanceInOhms))^3)) - 273.15 )
+  Else
+    Return (1 / (pir_A + (pir_B * LN(MeasuredResistanceInOhms)) + (pir_C * (LN(MeasuredResistanceInOhms))^3)) )
+  EndIf
+EndFunction
+Function GetHeiseBarometer() As Long
+  Dim strResp As String *10
+  If bGetBaro = 1 Then
+    If (setupmuxport(BPR_ID)) Then
+      bGetBaro = bGetBaro + 1
+    Else
+      EventMsg = " ERROR: (GetBaro) Unable to setup MuxPort. ID=" + BPR_ID + "."
+      EventDetails = ""
+      CallTable EventLog()
+      bGetBaro = -1
+    EndIf
+  EndIf
+  If bGetBaro =2 Then
+    SerialOpen (muxComPort, 19200,10,0,50)
+    bGetBaro = bGetBaro + 1
+    Timer(3,msec,2)
+    Return bGetBaro
+  EndIf
+  If bGetBaro = 3 AND (Timer(3,msec,4) < (BaroWarmupSec*1000)) Then Return bGetBaro
+  If bGetBaro =3 OR bGetBaro =4 Then
+    Do While ( bGetBaro >=3 AND bGetBaro <= 4)
+      If bGetBaro = 3 Then
+        strSensorCmd = "#01PS" + CR
+        strResp = "PS="
+      Else
+        strSensorCmd = "#01ST" + CR
+        strResp = "ST="
+      EndIf
+      SerialOut(muxComPort,strSensorCmd,"",0,10)
+      Timer(3,msec,2)
+      _temp2 =  0
+      _temp3  = 0
+      Do While ( _temp2 <= 100)
+        _temp2 = Timer(3,msec,4)
+        SerialIn(strBuffer,muxComPort,50,10,25)
+        _temp3 = InStr(1,strBuffer,strResp,2)
+        If (_Debug = 2) Then
+          EventMsg = "[" + Status.TimeStamp + "] (GetBaro) - ["+strSensorCmd+"] - Time(" + _temp2 + ") - Loc(" + _temp3 + ")."
+          EventDetails = strBuffer
+          CallTable EventLog()
+        EndIf
+        If ( _temp3 > 0) Then
+          If bGetBaro = 3 Then
+            SplitStr(Baro_mbar,strBuffer,"",1,0)
+            ExitDo
+          Else
+            SplitStr(Baro_Temp,strBuffer,"",1,0)
+            ExitDo
+          EndIf
+        Else
+          If _Debug =2 Then
+            EventMsg = "[" + Status.TimeStamp + "] *** (GetBaro) - Unable to get response from ["+strSensorCmd+"][loc(" + _temp3 + ")]."
+            EventDetails = strBuffer
+            CallTable EventLog()
+          EndIf
+          strBuffer = ""
+        EndIf
+        Delay( 1, 10, msec)
+      Loop
+      If bGetBaro = 3 Then
+        If _temp2 > 100 Then
+          bGetBaro = -3
+          ExitDo
+        EndIf
+      EndIf
+      If bGetBaro = 4  Then
+        If _temp2 > 100 Then
+          bGetBaro = -4
+          ExitDo
+        Else
+          ExitDo
+        EndIf
+      EndIf
+      bGetBaro = bGetBaro +1
+    Loop
+  EndIf
+  Return bGetBaro
+EndFunction
+Function ManualMuxControl (whichMux As String * 1 , whichPort As String * 1, sensorBaud As Long As 9600, bON As Boolean As true, bCloseport As Boolean As false) As Boolean
+  EventMsg = ""
+  EventDetails = ""
+  If whichMux <> "" Then muxId = (ASCII(whichMux) - ASCII("A")) +1
+  If whichPort <> "" Then portId = (ASCII(whichPort) - ASCII("A")) +1
+  If whichMux = "" OR whichPort = "" Then
+    If whichMux = "" Then muxId = 0
+    If whichPort = "" Then portId = 0
+  EndIf
+  If (muxId > MUX_NUM OR portId > MUXPORT_NUM) OR (muxId < 0 OR portId < 0) Then
+    EventMsg = "ERROR: Invalid mux(" +whichMux+ ") = " + muxId + " or port(" +whichPort+ ") = " +portId+ ")."
+    EventDetails = ""
+    CallTable Eventlog()
+    Return false
+  EndIf
+  SerialClose(muxComPort)
+  SerialOpen (muxComPort,muxBaud,0,0,200)
+  If ( muxId = 0 AND bON = false) OR (muxBITstatus(muxId) <> muxPortBitID(portId)) Then
+    strMuxCmd = ESC + STX + EOT
+    SerialOut(muxComPort,strMuxCmd,"",0,10)
+    muxBITstatus(1) = 0
+    muxBITstatus(2) = 0
+  EndIf
+  If (muxBITstatus(1) = 0 AND muxBITstatus(2)=0 AND muxId > 0)  Then
+    PortSet(muxAPower, true)
+  Else
+    strMuxCmd = ESC + STX + EOT
+    SerialOut(muxComPort,strMuxCmd,"",0,10)
+    muxBITstatus(muxId) = 0
+  EndIf
+  If (whichMux <> NAN OR whichMux <> 0)
+    strMuxCmd = ESC + STX + whichMux + whichPort
+    If muxId > 1 AND portId = 3 Then
+      EventMsg = "Port C of mux[" + CHR( (ASCII("A") + muxId) -1) + "] can not be used in expanded mode"
+      EventDetails = ""
+      CallTable eventlog()
+      Return false
+    EndIf
+  Else
+    strMuxCmd = ESC + STX + whichPort
+  EndIf
+  SerialOut(muxComPort,strMuxCmd,"",0,10)
+  muxBITstatus(muxId)  = muxPortBitID(portId)
+  SerialClose(muxComPort)
+  Select Case sensorBaud
+  Case 4800
+    SerialOpen (muxComPort, 4800,0,0,200)
+  Case Else
+    SerialOpen (muxComPort, 9600,0,0,200)
+  EndSelect
+EndFunction
+Function ConnectIridium
+  If bGetIridium = 1 Then
+    Timer(8,msec,2)
+    EventMsg = "[" + Status.TimeStamp + "] (Iridium) - Opening Ports)."
+    EventDetails = ""
+    CallTable EventLog()
+    SerialOpen(iridiumCom,iridiumBaud,0,0,500)
+    PortSet(iridiumSatPower,true)
+    bGetIridium = 10
+    Return bGetIridium
+  EndIf
+  If bGetIridium = 10 Then
+    If IfTime(iridOffOffsetHr,iridOnIntvlHr,HR) Then
+      SerialClose(iridiumCom)
+      PortSet(iridiumSatPower,false)
+      EventMsg = "[" + Status.TimeStamp + "] (Iridium) - closing Ports)."
+      EventDetails = ""
+      CallTable EventLog()
+      Timer(8,mSec,1)
+      bGetIridium = 0
+    EndIf
+  EndIf
+  Return bGetIridium
+EndFunction
+BeginProg
+  _Debug = 0
+  Mux1BitStatus = 0
+  Mux2BitStatus = 0
+  portIDs(1) = "A"
+  portIDs(2) = "B"
+  portIDs(3) = "C"
+  portIDs(4) = "D"
+  portIDs(5) = "E"
+  muxIDs(1) = "A"
+  muxIDs(2) = "B"
+  muxPortBitID(1) = &H1
+  muxPortBitID(2) = &H2
+  muxPortBitID(3) = &H4
+  muxPortBitID(4) = &H8
+  muxPortBitID(5) = &H10
+  muxPower(1) = muxAPower
+  muxPower(2) = muxBPower
+  PortSet(muxAPower,true)
+  PortSet(muxBPower,true)
+  SerialClose(muxComPort)
+  SerialOpen (muxComPort,muxBaud,3,0,50)
+  SerialOut(muxComPort,("" + ESC + STX + EOT),"",0,50)
+  SerialClose(muxComPort)
+  PortSet(muxAPower,false)
+  PortSet(muxBPower,false)
+  ASIMET_SensorArray(1,1) = ""
+  ASIMET_SensorArray(1,2) = "A"
+  ASIMET_SensorArray(1,3) = "A"
+  ASIMET_SensorArray(1,4) = "9600"
+  ASIMET_SensorArray(1,5) = ""
+  ASIMET_SensorArray(2,1) = "GPS"
+  ASIMET_SensorArray(2,2) = "A"
+  ASIMET_SensorArray(2,3) = "B"
+  ASIMET_SensorArray(2,4) = "4800"
+  ASIMET_SensorArray(2,5) = "6"
+  ASIMET_SensorArray(3,1) = ""
+  ASIMET_SensorArray(3,2) = "A"
+  ASIMET_SensorArray(3,3) = "C"
+  ASIMET_SensorArray(3,4) = "9600"
+  ASIMET_SensorArray(3,5) = ""
+  ASIMET_SensorArray(4,1) = "WND01"
+  ASIMET_SensorArray(4,2) = "A"
+  ASIMET_SensorArray(4,3) = "D"
+  ASIMET_SensorArray(4,4) = "9600"
+  ASIMET_SensorArray(4,5) = wind_valNum
+  ASIMET_SensorArray(5,1) = "SBE"
+  ASIMET_SensorArray(5,2) = "A"
+  ASIMET_SensorArray(5,3) = "E"
+  ASIMET_SensorArray(5,4) = "9600"
+  ASIMET_SensorArray(5,5) = SBE_ValNum
+  ASIMET_SensorArray(6,1) = "LINK10"
+  ASIMET_SensorArray(6,2) = "B"
+  ASIMET_SensorArray(6,3) = "A"
+  ASIMET_SensorArray(6,4) = "9600"
+  ASIMET_SensorArray(6,5) = LINK10_ValNum
+  ASIMET_SensorArray(7,1) = "Baro"
+  ASIMET_SensorArray(7,2) = "B"
+  ASIMET_SensorArray(7,3) = "B"
+  ASIMET_SensorArray(7,4) = "19200"
+  ASIMET_SensorArray(7,5) = "6"
+  ASIMET_SensorArray(9,1) = "Compass"
+  ASIMET_SensorArray(9,2) = "B"
+  ASIMET_SensorArray(9,3) = "D"
+  ASIMET_SensorArray(9,4) = HWBaud
+  ASIMET_SensorArray(9,5) = HWMsgParts
+  ASIMET_SensorArray(10,1) = ""
+  ASIMET_SensorArray(10,2) = "B"
+  ASIMET_SensorArray(10,3) = "E"
+  ASIMET_SensorArray(10,4) = "9600"
+  ASIMET_SensorArray(10,5) = ""
+  SW12(false)
+  bGLBStarOn = 1
+  ProgSignature=Status.ProgSignature(1,1)
+  EventMsg = "***** Datalogger Reset *****"
+  EventDetails = "Program Signature: " + ProgSignature + "; "
+  CallTable Eventlog()
+  Scan (1,Sec,3,0)
+    mainCounter = mainCounter +1
+    If _Debug = 10 Then
+      EventMsg = "[" + Status.TimeStamp + "][" +mainCounter+"] - Beginning of Scan..."
+      EventDetails = "SkippedScans( "+ Status.SkippedScan + " ) , SystemScans( "+ Status.SkippedSystemScan +" ) ."
+      CallTable Eventlog()
+    EndIf
+    If  Flag(2) Then
+      If Flag(3) Then
+        SplitStr(_tempStr(1),mux_port,",",2,5)
+        _temp3 = _tempStr3
+        _temp1 = ManualMuxControl(_tempStr1, _tempStr2, _temp3, (_tempStr(1) <> "") , FALSE)
+        Flag(3) = false
+      EndIf
+      If Flag(4) Then
+        SerialClose(muxComPort)
+        SerialOpen (muxComPort,muxBaud,0,0,50)
+        strMuxCmd = ESC + STX + EOT
+        SerialOut(muxComPort,strMuxCmd,"",0,50)
+        PortSet(muxAPower,false)
+        Flag(4) = false
+      EndIf
+      If Flag(5) Then
+        If (strSensorCmd <> "") Then SerialOut(muxComPort,strSensorCmd,"",0,50)
+        Flag(5) = false
+      EndIf
+      If Flag(6) Then
+        If (bGetIridium = 0)Then
+          PortSet(iridiumSatPower, true)
+          SerialOpen(iridiumCom,iridiumBaud,0,0,500)
+          bGetIridium = 1
+        EndIf
+        If (bGetIridium = 10)Then
+          bGetIridium = 0
+          SerialClose(iridiumCom)
+          PortSet(iridiumSatPower,false)
+          Flag(6) = false
+        EndIf
+      EndIf
+    Else
+      If (Flag(8) ) Then
+        setupmuxport(varCount)
+        Flag(8) = false
+      EndIf
+      If bGetWndComp = 0 Then
+        If (TimeIntoInterval(AWindOnOffSetMin, AWindOnIntvlMin, Min)) Then
+          bGetHW =1
+          bCompTrigger = False
+          bGetWndComp = 1
+        EndIf
+      EndIf
+      If bGetMet = 0 Then
+        If (TimeIntoInterval(MetOnOffSetMin, MetOnIntvlMin, Min) OR Flag(7)) Then
+          Flag(7) = false
+          bGetMet = 1
+          bGetBaro = 1
+          GetHeiseBarometer()
+          metCounter = 0
+          TRB_time = 0
+        EndIf
+      EndIf
+      If (gpsState =0) AND (TimeIntoInterval(gpsOffSetMin, gpsIntvlMin, Min) OR Flag(gpsFlag)) Then
+        gpsState = 1
+      EndIf
+      If (bGetCTD12 < 1 AND TimeIntoInterval(sbeOffSetMin, sbeIntvlMin, Min) )  Then
+        whichSBE = 1
+        bGetCTD12 = 1
+        sbeOpenPort = true
+      EndIf
+      If ( (bGetLink10 < 1) AND TimeIntoInterval(Link10OffSetMin, Link10IntvlMin, Min) ) Then
+        bGetLink10 = 1
+      EndIf
+      If bGetIridium = 0 Then
+        If IfTime(iridOnOffsetHr,iridOnIntvlHr,Hr) Then bGetIridium = 1
+      EndIf
+      If bGetMet Then
+        metCounter = metCounter +1
+        If _Debug  = 10 Then
+          EventMsg = "(Met): [" +metCounter+"] - SkippedScans( "+ Status.SkippedScan + " ) , SystemScans( "+ Status.SkippedSystemScan +" ) ."
+          EventDetails = ""
+          CallTable Eventlog()
+        EndIf
+        If bGetBaro  Then
+          Timer(2,msec,2)
+          If ( metCounter > 3 ) Then
+            _temp5 = GetHeiseBarometer()
+            If _Debug =2 Then
+              EventMsg = "(Baro): [" +metCounter+"] bGetBaro(" +bGetBaro+") - Barometer Data  ("+ Baro_mbar +" , "+ Baro_Temp +") "+ Timer(2,msec,4) + " mSecs)"
+              EventDetails = ""
+              CallTable Eventlog()
+            EndIf
+            If bGetBaro < 0 Then
+              EventMsg = "ERROR: (Baro): [" +bGetBaro+"] - Unable to get Heise Barometer data."
+              EventDetails =  "Barometer Data  ("+ Baro_mbar +" , "+ Baro_Temp +") "+ Timer(2,msec,4) + " mSecs)"
+              CallTable Eventlog()
+              Baro_mbar =NAN
+              Baro_Temp = NAN
+              bGetBaro = 3
+            Else
+              If metCounter > BaroWarmupSec Then
+                bGetBaro = 3
+                CallTable Baro_RawData
+              EndIf
+            EndIf
+          EndIf
+        EndIf
+        VoltSe (AirTempC,1,mV2500,4,True,0,250,0.1,-30)
+        VoltSe (RHumidity,1,mV2500,5,True,0,_60Hz,0.1,0)
+        If RHumidity > 100 Then RHumidity = 100
+        VoltSe (Rain,1,mv5000,3,True,0,_60Hz,1.0,0)
+        VoltDiff (Psp,1,AutoRange,5,True ,0,_60Hz, SolarCoeff,0)
+        VoltDiff (ThermopileMeasured,1,mV25,6,True ,0,_60Hz, 1.0,0)
+        BrHalf (CaseResistMeasured,1,Autorange,13,Vx2,1,2500,True ,0,250,1.0,0)
+        CaseTemp = ResistanceToTemperature( CaseResistMeasured, "K")
+        BrHalf (DomeResistMeasured,1,Autorange,14,Vx2,1,2500,True ,0,250,1.0,0)
+        DomeTemp = ResistanceToTemperature( DomeResistMeasured, "K")
+        CallTable PIR_RawData
+        Pir_Wm2 = (ThermopileMeasured/(Eppley_Sensitivity*1000)) + (StefBoltzConst * (CaseTemp^4))
+        CallTable AMet_6min()
+        If (TimeIntoInterval((MET_Off*60)-1, (MetOnIntvlMin*60), Sec)) Then
+          bGetMet = 0
+          bGetBaro = 0
+          Timer(3,msec,1)
+          Timer(2,msec,1)
+        EndIf
+      EndIf
+      If (bGetHW)
+        If _Debug = 10 Then
+          EventMsg = "[" + Status.TimeStamp + "][" +mainCounter+"] -    Entering bGetHW section (" +bGetHW+ ")"
+          EventDetails = ""
+          CallTable Eventlog()
+        EndIf
+        _temp3 =  GetCompassSingle()
+        If _Debug = 3 Then
+          EventMsg = "[" + Status.TimeStamp + "] (COMPASS) : returned [" +_temp3+"]  - bValidCompRead(" +bValidCompRead + ")"
+          EventDetails = CompassString
+          CallTable Eventlog()
+        EndIf
+        If (_temp3 >=4) Then
+          If _Debug Then CallTable DBG_Compass()
+          If (bValidCompRead) Then
+            CallTable Compass_Raw()
+            If (TimeIntoInterval( ((AWindDurationMin*60)-1) ,(AWindDurationMin*60),Sec)) Then
+              bCompTrigger = true
+            Else
+              bCompTrigger = false
+            EndIf
+            CallTable Comp_6Min()
+            bGetHW = 3
+          Else
+            If HW_Tries >= 3 Then bGetHW = 3
+          EndIf
+        EndIf
+        If _Debug = 10 Then
+          EventMsg = "[" + Status.TimeStamp + "][" +mainCounter+"] -    Exiting bGetHW section"
+          EventDetails = ""
+          CallTable Eventlog()
+        EndIf
+      EndIf
+      If (bGetWndComp) Then
+        PulseCount (W1_SpeedRaw,1,1 ,1,1,0.098,0)
+        BrHalf(W1_DirRaw,1,mV2500,1,Vx1,2,2500,True,0,_60Hz,355,0)
+        If W1_DirRaw >=360 Then W1_DirRaw=0
+        Wnd1_DirCorr = ((HEADING + W1_DirRaw) MOD 360)
+        CallTable Awnd1_RawData
+        PulseCount (W2_SpeedRaw,1,2,1,1,0.098,0)
+        BrHalf(W2_DirRaw,1,mV2500,2,Vx1,2,2500,True,0,_60Hz,355,0)
+        If W2_DirRaw >=360 Then W2_DirRaw=0
+        Wnd2_DirCorr = ((HEADING + W2_DirRaw) MOD 360)
+        CallTable Awnd2_RawData
+        If _Debug Then CallTable DBG_AWindsRaw
+        If (TimeIntoInterval(((AWindOnOffSetMin + MetDurationMin)*60)-1, (AWindOnIntvlMin*60), Sec)) Then
+          bGetHW = 0
+          bGetWndComp = 0
+        EndIf
+        CallTable AWind_6Min
+      EndIf
+      If ( bGetCTD12 >= 1) Then
+        _temp5 = GetCTDs(whichSBE, sbeOpenPort)
+        If ( _temp5 >= 1) Then
+          If bGetCTD12 >=4 Then
+            If  whichSBE = 1 Then
+              CallTable CTD1_6Min
+              whichSBE = 2
+              bGetCTD12 = 2
+              sbeOpenPort = false
+            Else
+              CallTable CTD2_6Min
+              whichSBE = 0
+              bGetCTD12 = 0
+            EndIf
+            If (_Debug =6 ) Then
+              EventMsg = "[" + Status.TimeStamp + "] (Exited GetCTD) - [" + _temp1 + "] comma(" +_temp3+ ")  time(" + _temp2 + ")."
+              EventDetails = strBuffer
+              CallTable EventLog()
+            EndIf
+          EndIf
+        Else
+          EventMsg = "ERROR: Unable to get valid CTD data for SBE [" + ABS(_temp5) + "]"
+          EventDetails = strBuffer
+          CallTable EventLog()
+          If ABS(_temp5) = 1 Then
+            whichSBE = 2
+            bGetCTD12 = 2
+          ElseIf ABS(_temp5)=2
+            bGetCTD12 = 0
+            whichSBE = 0
+          EndIf
+        EndIf
+      EndIf
+      If bGetLink10 Then
+        Timer(2,msec,2)
+        If ( GetLink10() ) Then
+        Else
+          EventMsg = "ERROR: Unable to get Link10 Data (" + Timer(2,msec,4) + " mSecs)"
+          EventDetails = "Program Signature: " + ProgSignature + "; "
+          CallTable Eventlog()
+        EndIf
+        bGetLink10 = 0
+        _temp3 = Timer(2,msec,4)
+      EndIf
+      If ( (gpsState >= 1 OR gpsState = -2) AND (bGetMet <1 AND bGetWndComp <=0 AND bGetHW =0 AND bGetWND1 = 0 AND  bGetCTD12= 0)) Then
+        If (GetGPS()) Then
+          If gpsState =-1 Then
+            CallTable GPS_1Hr
+            gpsState = 0
+          EndIf
+          If (_Debug = 7) Then
+            EventMsg = "GPS:[" + gpsCounter + "]  returned to mainScan with gpsState(" +gpsState+ ")  tries(" +gpsTries+ ")"
+            EventDetails = ""
+            CallTable EventLog()
+          EndIf
+        Else
+          EventMsg = "ERROR: Unable to get valid GPS reading."
+          EventDetails = GPGGAString
+          CallTable EventLog()
+          gpsState = 0
+        EndIf
+      EndIf
+      _temp1 = Timer(1,msec,4)
+      If ( bShutOffMux AND (bGetMet = 0 AND gpsState =0 AND bGetWndComp <=0 AND bGetHW =0 AND bGetWND1 = 0 AND  bGetCTD12= 0 )  ) Then
+        ShutOffMux(4)
+        bShutOffMux = 0
+        If _Debug Then
+          EventMsg = "MUX: Shutting all mux/ports off "
+          EventDetails = ""
+          CallTable Eventlog()
+        EndIf
+        SerialClose(muxComPort)
+      EndIf
+      If bGLBStarOn = 0 Then
+        If(IfTime( (glbStarOffSetMin + 1),glbStarIntvlMin,min) ) Then
+          SW12(false)
+          bGLBStarOn = 1
+          If _Debug Then
+            EventMsg = "(GlobalStar) - Restarting..."
+            EventDetails = ""
+            CallTable Eventlog()
+          EndIf
+        EndIf
+      Else
+        If (IfTime(glbStarOffSetMin,glbStarIntvlMin,min) ) Then
+          SW12(true)
+          bGLBStarOn = 0
+          If _Debug Then
+            EventMsg = "(GlobalStar) - Shutting down for 1 min."
+            EventDetails = ""
+            CallTable Eventlog()
+          EndIf
+        EndIf
+      EndIf
+      If bGetIridium >= 1 Then
+        ConnectIridium()
+      EndIf
+      If ( IfTime(0,10,sec)) Then
+        PortSet(7, true)
+        Delay(1,100,mSec)
+        PortSet(7, false)
+      EndIf
+      If _Debug = 10 Then
+        EventMsg = "[" + Status.TimeStamp + "] [" +mainCounter+"] - End of Scan..."
+        EventDetails = ""
+        CallTable Eventlog()
+      EndIf
+      If (TimeIntoInterval(0,1,min)) Then
+        VoltSe (P_RH,1,mV2500,RhChannel,1,0,250,0.1,0)
+        If P_RH > 100 Then P_RH = 100
+        PanelTemp (P_Temp,250)
+        Battery (P_Batt)
+        CallTable Sys_1Hr
+      EndIf
+    EndIf
+  NextScan
+EndProg
