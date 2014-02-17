@@ -125,17 +125,17 @@ Const BaroWarmupSec     = 2   'Seconds
 
 '-------------------------------------------------------------
 'Solar radiation  (PSP)  SolarCoeff
-Const PSP_CalConst        = 8.09  'E-6         ' Buoy1 =8.48E-6;  Buoy2 = 8.09E-6
+Const PSP_CalConst        = 8.48  'E-6         ' Buoy1 =8.48E-6;  Buoy2 = 8.09E-6
 
 '------------------------------------------------------------------
 '(PIR)
 'From calibration sheet :Sensitivity is given in units of uV W-1 m2          'Eppley_Sensitivity
-Const PIR_CalConst = 2.89  'E-6      'Buoy1 = 2.57E-6   ;  buoy2 = 2.89E-6
+Const PIR_CalConst = 2.57  'E-6      'Buoy1 = 2.57E-6   ;  buoy2 = 2.89E-6
 
 '------------------------------------------------------------------
 ' Honeywell Compass user Input
 Const HWMaxCount			= 35		' Number of tries to get valid reading.... reset after.
-Const HW_DirOffset    = 1     ' B2 := 1      B1:= -7;  
+Const HW_DirOffset    = -7     ' Buoy1:= -7;  Buoy2 := 1  
 
 '------------------------------------------------------------------
 ' GPS user Input
@@ -151,7 +151,7 @@ Const gpsValidation  = "A"
 '' Camera Input
 Const cameraIntvlMin  = 60
 Const cameraOffSetMin = 49          'was 50... changed to not fall same time as CTD
-Const cameraImageLabel = "B2/41063" 'Buoy1  B1/41062   ; Buoy2 B2/41063
+Const cameraImageLabel = "B1/41062" 'Buoy1  B1/41062   ; Buoy2 B2/41063
 
 'PSP raw reading Operational Limits
 'Const HighLightLimit = 7000
